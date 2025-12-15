@@ -2,28 +2,9 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
 import os
-import logging
-from datetime import datetime
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
-
-# Request logging middleware
-@app.before_request
-def log_request():
-    logger.info(f"Request: {request.method} {request.path}")
-
-@app.after_request
-def log_response(response):
-    logger.info(f"Response: {response.status_code}")
-    return response
 
 
 # ---------------- COMMON DICTIONARIES ----------------
@@ -85,38 +66,6 @@ SYMPTOM_MAX = {
 @app.route('/')
 def home():
     return jsonify({"message": "Health Prediction API running successfully"})
-
-
-# Health check endpoint for deployment monitoring
-@app.route('/health', methods=['GET'])
-def health_check():
-    return jsonify({
-        "status": "healthy",
-        "timestamp": datetime.utcnow().isoformat(),
-        "service": "Health Assistant API"
-    }), 200
-
-
-# API Documentation endpoint
-@app.route('/api/docs', methods=['GET'])
-def api_docs():
-    return jsonify({
-        "endpoints": {
-            "GET /": "API status message",
-            "GET /health": "Health check endpoint",
-            "GET /api/docs": "API documentation",
-            "POST /predict/pre-diabetes": "Pre-diabetes risk assessment",
-            "POST /predict/pre-heart": "Pre-heart disease risk assessment",
-            "POST /predict/pre-parkinson": "Pre-parkinson risk assessment",
-            "POST /predict/pre-breast": "Pre-breast cancer risk assessment",
-            "POST /predict/diabetes": "Diabetes prediction",
-            "POST /predict/heart": "Heart disease prediction",
-            "POST /predict/parkinson": "Parkinson's disease prediction",
-            "POST /predict/breast": "Breast cancer prediction",
-            "POST /predict/symptom": "Symptom-based disease prediction"
-        },
-        "version": "1.0.0"
-    }), 200
 
 
 # ------------------ PRE-DIABETES SCREENING ------------------
@@ -501,6 +450,10 @@ def predict_symptom():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
+<<<<<<< HEAD
     logger.info(f"Starting Health Assistant API on port {port}")
     # Use gunicorn in production, Flask dev server locally
     app.run(debug=False, host='0.0.0.0', port=port, threaded=True)
+=======
+    app.run(debug=False, host='0.0.0.0', port=port)
+>>>>>>> parent of f227261 (Feature: add logging, health check, and API documentation endpoints)
