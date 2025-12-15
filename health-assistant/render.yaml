@@ -4,9 +4,8 @@ services:
     env: python
     region: singapore
     plan: free
-    rootDir: health-assistant
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 1 --timeout 60 --access-logfile - --error-logfile - app:app
+    startCommand: bash -c 'cd health-assistant && gunicorn --bind 0.0.0.0:$PORT --workers 1 --timeout 60 --access-logfile - --error-logfile - app:app'
     envVars:
       - key: PYTHON_VERSION
         value: 3.12
