@@ -502,4 +502,5 @@ def predict_symptom():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     logger.info(f"Starting Health Assistant API on port {port}")
-    app.run(debug=False, host='0.0.0.0', port=port)
+    # Use gunicorn in production, Flask dev server locally
+    app.run(debug=False, host='0.0.0.0', port=port, threaded=True)
