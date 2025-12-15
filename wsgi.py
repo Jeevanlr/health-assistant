@@ -1,12 +1,19 @@
 """WSGI entry point for Gunicorn. Imports Flask app from health-assistant."""
 import sys
 import os
+import importlib.util
 
-# Add health-assistant directory to path so gunicorn can find and import the app
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'health-assistant'))
+# Get the absolute path to app.py in health-assistant directory
+app_path = os.path.join(os.path.dirname(__file__), 'health-assistant', 'app.py')
 
-# Import the Flask app instance
-from app import app
+# Load the app module explicitly
+spec = importlib.util.spec_from_file_location("app", app_path)
+app_module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(app_module)
+
+# Export the Flask app instance for gunicorn
+app = app_module.app
 
 if __name__ == '__main__':
     app.run()
+
